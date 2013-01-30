@@ -1,0 +1,135 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.barchart.base</groupId>
+		<artifactId>barchart-archon</artifactId>
+		<version>2.1.1</version>
+	</parent>
+
+	<groupId>com.barchart.wrap</groupId>
+	<artifactId>barchart-wrap-elasticsearch-all</artifactId>
+	<version>0.20.3-build001-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+
+	<scm>
+		<url>https://github.com/barchart/barchart-wrap-elasticsearch-all</url>
+		<connection>scm:git:git://github.com/barchart/barchart-wrap-elasticsearch-all.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/barchart/barchart-wrap-elasticsearch-all.git</developerConnection>
+	</scm>
+
+	<description>
+		bundle wrapper for elasticsearch
+	</description>
+
+	<properties>
+		<elasticsearchVersion>0.20.3</elasticsearchVersion>
+		<luceneVersion>3.6.2</luceneVersion>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch</artifactId>
+			<version>${elasticsearchVersion}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.elasticsearch</groupId>
+			<artifactId>elasticsearch-cloud-aws</artifactId>
+			<version>1.10.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<resources>
+			<resource>
+				<directory>target/classes</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack-source</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeGroupIds>org.apache.lucene,org.elasticsearch</includeGroupIds>
+							<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- produce bundle -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<_failok>true</_failok>
+						<_removeheaders>
+							Service-Component,
+							Include-Resource,
+							Private-Package,
+							Ignore-Package,
+						</_removeheaders>
+						<Import-Package>
+							*;resolution:=optional
+						</Import-Package>
+						<Export-Package>
+							org.elasticsearch*;version=${elasticsearchVersion},
+							org.apache.lucene*;version=${luceneVersion},
+						</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>build-helper-maven-plugin</artifactId>
+										<versionRange>[0,)</versionRange>
+										<goals>
+											<goal>add-source</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+
+		</pluginManagement>
+
+	</build>
+
+</project>
