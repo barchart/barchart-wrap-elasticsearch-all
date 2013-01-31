@@ -10,7 +10,7 @@
 
 	<groupId>com.barchart.wrap</groupId>
 	<artifactId>barchart-wrap-elasticsearch-all</artifactId>
-	<version>0.20.3-build002-SNAPSHOT</version>
+	<version>0.20.3-build002</version>
 	<packaging>bundle</packaging>
 
 	<scm>
