@@ -1,4 +1,4 @@
-barchart-wrap-axis
+barchart-wrap-elasticsearch-all
 ========================
 
-Apache Axis package without optional dependencies
+ElasticSearch and Lucene OSGI bundle wrapper
