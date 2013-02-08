@@ -47,12 +47,6 @@
 
 	<build>
 
-		<resources>
-			<resource>
-				<directory>target/classes</directory>
-			</resource>
-		</resources>
-
 		<plugins>
 
 			<plugin>
@@ -83,13 +77,15 @@
 						<_failok>true</_failok>
 						<_removeheaders>
 							Service-Component,
-							Include-Resource,
 							Private-Package,
 							Ignore-Package,
 						</_removeheaders>
 						<Import-Package>
 							*;resolution:=optional
 						</Import-Package>
+						<Include-Resource>
+							config/=target/classes/config
+						</Include-Resource>
 						<Export-Package>
 							org.elasticsearch*;version=${elasticsearchVersion},
 							org.apache.lucene*;version=${luceneVersion},
