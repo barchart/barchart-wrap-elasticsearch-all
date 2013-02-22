@@ -41,6 +41,7 @@
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-cloud-aws</artifactId>
 			<version>1.10.0</version>
+			<optional>true</optional>
 		</dependency>
 
 	</dependencies>
