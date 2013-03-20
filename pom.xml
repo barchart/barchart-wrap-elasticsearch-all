@@ -42,7 +42,41 @@
 			<artifactId>elasticsearch-cloud-aws</artifactId>
 			<version>1.10.0</version>
 			<optional>true</optional>
+            <exclusions>
+                <exclusion>
+					<groupId>org.elasticsearch</groupId>
+					<artifactId>elasticsearch</artifactId>
+                </exclusion>
+                <!-- We need to exclude httpclient, since it pulls the wrong version -->
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <!-- jackson is optional -->
+                <exclusion>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-core-asl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.jackson</groupId>
+                    <artifactId>jackson-mapper-asl</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
+		
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+		
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.3.26</version>
+            <scope>provided</scope>
+        </dependency>
 
 	</dependencies>
 
