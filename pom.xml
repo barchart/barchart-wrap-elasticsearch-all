@@ -31,11 +31,7 @@
 		<luceneVersion>3.6.2</luceneVersion>
 
 		<!-- Import. -->
-		<jacksonVersion>[1.9,2.0)</jacksonVersion>
-		<apacheHttpVersion>[4.2.4,4.3.0)</apacheHttpVersion>
 		<awsVersion>[1.4.1,1.5)</awsVersion>
-		<apacheCodecVersion>[1.6,2)</apacheCodecVersion>
-		<apacheLoggingVersion>[1.1,2)</apacheLoggingVersion>
 
 		<unpackSource>target/unpack-source</unpackSource>
 
@@ -82,12 +78,6 @@
 		</dependency>
 		
 		<!-- Not embedded, transitive. -->
-
-		<dependency>
-			<groupId>com.barchart.wrap</groupId>
-			<artifactId>barchart-wrap-apache-http-all</artifactId>
-			<version>[4.2.3-SNAPSHOT,4.3-SNAPSHOT)</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.barchart.wrap</groupId>
@@ -201,10 +191,6 @@
 							Embed-Transitive,
 						</_removeheaders>
 						<Import-Package>
-							org.apache.commons.codec.*;version="${apacheCodecVersion}",
-							org.apache.commons.logging.*;version="${apacheLoggingVersion}",
-							org.apache.http.*;version="${apacheHttpVersion}";,
-							org.codehaus.jackson.*;version="${jacksonVersion}",
 							com.amazonaws.*;version="${awsVersion}",
 							*;resolution:=optional,
 						</Import-Package>
