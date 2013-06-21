@@ -10,7 +10,7 @@
 
 	<groupId>com.barchart.wrap</groupId>
 	<artifactId>barchart-wrap-elasticsearch-all</artifactId>
-	<version>0.20.4-build003-SNAPSHOT</version>
+	<version>0.20.6-build001-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<scm>
@@ -24,23 +24,40 @@
 	</description>
 
 	<properties>
-		<elasticsearchVersion>0.20.4</elasticsearchVersion>
+
+		<!-- Export. -->
+		<elasticsearchVersion>0.20.6</elasticsearchVersion>
+		<elasticsearchCloudVersion>1.12.0</elasticsearchCloudVersion>
 		<luceneVersion>3.6.2</luceneVersion>
+
+		<!-- Import. -->
+		<jacksonVersion>[1.9,2.0)</jacksonVersion>
+		<apacheHttpVersion>[4.2.4,4.3.0)</apacheHttpVersion>
+		<awsVersion>[1.4.1,1.5)</awsVersion>
+		<apacheCodecVersion>[1.6,2)</apacheCodecVersion>
+		<apacheLoggingVersion>[1.1,2)</apacheLoggingVersion>
+
+		<unpackSource>target/unpack-source</unpackSource>
+
 	</properties>
 
 	<dependencies>
+
+		<!-- Embedded, non-transitive -->
 
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>${elasticsearchVersion}</version>
+			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch-cloud-aws</artifactId>
-			<version>1.10.0</version>
+			<version>${elasticsearchCloudVersion}</version>
+			<scope>provided</scope>
 			<optional>true</optional>
             <exclusions>
                 <exclusion>
@@ -64,35 +81,19 @@
             </exclusions>
 		</dependency>
 		
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.2.2</version>
-            <scope>provided</scope>
-        </dependency>
-		
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.3.26</version>
-            <scope>provided</scope>
-            <exclusions>
-                <!-- We need to exclude httpclient, since it pulls the wrong version -->
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <!-- jackson is optional -->
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-core-asl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-mapper-asl</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<!-- Not embedded, transitive. -->
+
+		<dependency>
+			<groupId>com.barchart.wrap</groupId>
+			<artifactId>barchart-wrap-apache-http-all</artifactId>
+			<version>[4.2.3-SNAPSHOT,4.3-SNAPSHOT)</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.barchart.wrap</groupId>
+			<artifactId>barchart-wrap-aws-java-sdk</artifactId>
+			<version>[1.4.1-SNAPSHOT,1.5-SNAPSHOT)</version>
+		</dependency>
 
 	</dependencies>
 
@@ -111,9 +112,75 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
+							<includeScope>provided</includeScope>
 							<includeGroupIds>org.apache.lucene,org.elasticsearch</includeGroupIds>
+							<excludeTransitive>true</excludeTransitive>
 							<failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${unpackSource}</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-classes</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeScope>provided</includeScope>
+							<includeGroupIds>org.apache.lucene,org.elasticsearch</includeGroupIds>
+							<excludeTransitive>true</excludeTransitive>
+							<outputDirectory>target/classes</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- register source folder -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>register-source</id>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<phase>prepare-package</phase>
+						<configuration>
+							<sources>
+								<path>${unpackSource}</path>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- attach source jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- attach javadocs jar : skip -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<skip>true</skip>
 						</configuration>
 					</execution>
 				</executions>
@@ -130,16 +197,23 @@
 							Service-Component,
 							Private-Package,
 							Ignore-Package,
+							Embed-Dependency,
+							Embed-Transitive,
 						</_removeheaders>
 						<Import-Package>
-							*;resolution:=optional
+							org.apache.commons.codec.*;version="${apacheCodecVersion}",
+							org.apache.commons.logging.*;version="${apacheLoggingVersion}",
+							org.apache.http.*;version="${apacheHttpVersion}";,
+							org.codehaus.jackson.*;version="${jacksonVersion}",
+							com.amazonaws.*;version="${awsVersion}",
+							*;resolution:=optional,
 						</Import-Package>
 						<Include-Resource>
-							config/=target/classes/config
+							config/=${unpackSource}/config
 						</Include-Resource>
 						<Export-Package>
-							org.elasticsearch*;version=${elasticsearchVersion},
-							org.apache.lucene*;version=${luceneVersion},
+							org.elasticsearch*;version=${elasticsearchVersion};-split-package:=merge-last,
+							org.apache.lucene*;version=${luceneVersion};-split-package:=merge-last,
 						</Export-Package>
 					</instructions>
 				</configuration>
