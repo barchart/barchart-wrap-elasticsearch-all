@@ -10,7 +10,7 @@
 
 	<groupId>com.barchart.wrap</groupId>
 	<artifactId>barchart-wrap-elasticsearch-all</artifactId>
-	<version>0.20.6-build004-SNAPSHOT</version>
+	<version>0.90.7-build001-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<scm>
@@ -26,9 +26,9 @@
 	<properties>
 
 		<!-- Export. -->
-		<elasticsearchVersion>0.20.6</elasticsearchVersion>
-		<elasticsearchCloudVersion>1.12.0</elasticsearchCloudVersion>
-		<luceneVersion>3.6.2</luceneVersion>
+		<elasticsearchVersion>0.90.7</elasticsearchVersion>
+		<elasticsearchCloudVersion>1.16.0</elasticsearchCloudVersion>
+		<luceneVersion>4.5.1</luceneVersion>
 
 		<!-- Import. -->
 		<awsVersion>[1.4.1,1.5)</awsVersion>
