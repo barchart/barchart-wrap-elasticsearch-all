@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>com.barchart.base</groupId>
 		<artifactId>barchart-archon</artifactId>
-		<version>2.1.1</version>
+                <version>3.0.7</version>
 	</parent>
 
 	<groupId>com.barchart.wrap</groupId>
 	<artifactId>barchart-wrap-elasticsearch-all</artifactId>
-	<version>0.90.7-build002-SNAPSHOT</version>
+	<version>1.4.5-build001-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<scm>
@@ -26,9 +26,9 @@
 	<properties>
 
 		<!-- Export. -->
-		<elasticsearchVersion>0.90.7</elasticsearchVersion>
-		<elasticsearchCloudVersion>1.16.0</elasticsearchCloudVersion>
-		<luceneVersion>4.5.1</luceneVersion>
+		<elasticsearchVersion>1.4.5</elasticsearchVersion>
+		<elasticsearchCloudVersion>2.4.1</elasticsearchCloudVersion>
+		<luceneVersion>4.10.4</luceneVersion>
 
 		<!-- Import. -->
 		<awsVersion>[1.4.1,1.5)</awsVersion>
